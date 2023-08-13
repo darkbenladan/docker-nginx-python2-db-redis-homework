@@ -1,6 +1,7 @@
-#FROM
-#USER
+FROM python
+
 # uWSGI:
+USER root
 RUN pip install uwsgi
 # Copy the base uWSGI ini file to enable default dynamic uwsgi process number
 COPY ./uwsgi.ini /etc/uwsgi/
@@ -14,15 +15,15 @@ ENV UWSGI_PROCESSES 16
 USER root
 ARG INSTALL_CRON=false
 RUN if [ ${INSTALL_CRON} = true ]; then \
-    apt-get update -yqq ; \
-    apt-get -y install cron \
+    apt-get update -y ; \
+    apt-get install -y cron \
 ;fi
 # SUPERVISOR:
 USER root
 ARG INSTALL_SUPERVISOR=false
 RUN if [ ${INSTALL_SUPERVISOR} = true ]; then \
-    apt-get update -yqq ; \
-    apt-get -y install supervisor \
+    apt-get update -y ; \
+    apt-get install -y supervisor \
 ;fi
 
 # NPM:
@@ -30,11 +31,11 @@ USER root
 ARG INSTALL_NPM=false
 ARG NODE_VERSION
 RUN if [ ${INSTALL_NPM} = true ]; then \
-    apt-get update -yqq ; \
+    apt-get update -y ; \
     apt-get install -y gnupg2 ; \
     curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - ; \
     apt-get install nodejs npm ; \
-    apt-get -y install nodejs \
+    apt-get install -y nodejs \
 ;fi
 
 # GIT:
@@ -72,4 +73,4 @@ ARG WORK_DIR=/var/www
 RUN usermod -u 1000 www-data
 WORKDIR ${WORK_DIR}
 CMD [ "uwsgi" ]
-#PORT
+EXPOSE 9000
