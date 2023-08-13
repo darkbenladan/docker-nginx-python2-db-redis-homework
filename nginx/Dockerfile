@@ -1,3 +1,4 @@
+FROM nginx:alpine
 COPY nginx.conf /etc/nginx/
 ARG CHANGE_SOURCE=false
 RUN if [ ${CHANGE_SOURCE} = true ]; then \

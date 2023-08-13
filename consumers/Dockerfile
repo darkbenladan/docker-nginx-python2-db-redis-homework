@@ -1,4 +1,4 @@
-FROM python:2.7-stretch
+FROM python
 # uWSGI:
 USER root
 RUN pip install uwsgi
@@ -19,7 +19,7 @@ ENV UWSGI_PROCESSES 16
 USER root
 ARG INSTALL_CRON=false
 RUN if [ ${INSTALL_CRON} = true ]; then \
-    apt-get update -yqq ; \
+    apt-get update -y ; \
     apt-get -y install cron \
 ;fi
 
@@ -27,7 +27,7 @@ RUN if [ ${INSTALL_CRON} = true ]; then \
 USER root
 ARG INSTALL_SUPERVISOR=false
 RUN if [ ${INSTALL_SUPERVISOR} = true ]; then \
-    apt-get update -yqq ; \
+    apt-get update -y ; \
     apt-get -y install supervisor \
 ;fi
 
@@ -36,7 +36,7 @@ USER root
 ARG INSTALL_NPM=false
 ARG NODE_VERSION
 RUN if [ ${INSTALL_NPM} = true ]; then \
-    apt-get update -yqq ; \
+    apt-get update -y ; \
     apt-get install -y gnupg2 ; \
     curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - ; \
     apt-get install nodejs npm ; \
@@ -82,4 +82,4 @@ ARG WORK_DIR=/var/www
 RUN usermod -u 1000 www-data
 WORKDIR ${WORK_DIR}
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
-expose 9000
+EXPOSE 9000
